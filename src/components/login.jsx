@@ -5,7 +5,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!email || !password) {
@@ -13,14 +13,32 @@ const Login = () => {
       return;
     }
 
-    // Log the values (in a real app, you'd make an API call here)
-    console.log('Email:', email);
-    console.log('Password:', password);
+    try {
+      const response = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setError('');
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Login successful!');
+        console.log('JWT Token:', data.token); // Store this token in localStorage if needed
+        setEmail('');
+        setPassword('');
+        setError('');
+      } else {
+        setError(data.message || 'Login failed');
+      }
+    } catch (err) {
+      console.error('Error:', err);
+      setError('Server error, please try again later');
+    }
   };
 
-  // Inline styles
   const styles = {
     container: {
       width: '300px',
@@ -82,7 +100,7 @@ const Login = () => {
             style={styles.input}
           />
         </div>
-        
+
         <div style={styles.formGroup}>
           <label htmlFor="password" style={styles.label}>Password</label>
           <input
@@ -98,7 +116,12 @@ const Login = () => {
 
         {error && <div style={styles.errorMessage}>{error}</div>}
 
-        <button type="submit" style={styles.button} onMouseOver={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor} onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}>
+        <button
+          type="submit"
+          style={styles.button}
+          onMouseOver={(e) => e.target.style.backgroundColor = styles.buttonHover.backgroundColor}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
+        >
           Login
         </button>
       </form>

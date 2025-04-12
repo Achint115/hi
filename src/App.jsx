@@ -4,7 +4,7 @@ import HomePage from './components/homePage';
 import CategoryPage from './components/categoryPage';
 import ProductDetailPage from './components/ProductDetailPage';
 import Navbar from './components/navbar';
-import Register from "./components/Register";
+import Register from './components/register';
 import Login from "./components/login";
 
 const App = () => {
@@ -12,7 +12,7 @@ const App = () => {
     <Router>
      
      <Navbar/>
-
+     
       <Routes>
         
         <Route path="/" element={<HomePage />} /> {/* Home page route */}
