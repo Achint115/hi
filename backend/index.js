@@ -3,8 +3,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const bodyParser = require('body-parser');
-const path = require('path');
 // To manage environment variables securely
 
 const app = express();
@@ -12,37 +10,22 @@ const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret_key'; // Use environment variable in production
 
 // Middleware
-app.use(bodyParser.json());
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, 'public')));
 
 
 // Connect to MongoDB
-mongoose.connect( 'mongodb+srv://root:root@cluster0.rf96o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-
-  .then(() => console.log('MongoDB connected'))
+mongoose.connect( 'mongodb+srv://root:root@cluster0.rf96o.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(() => console.log('MongoDB connected'))
   .catch(err => console.log('MongoDB connection error:', err));
 
-// User Schema
-const userSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true }
-});
 
-const User = mongoose.model('User', userSchema);
 
 // Serve index.html
 app.get('/', (req, res) => {
-  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
+  res.send({massage:"server is live"})
 });
 
 // Signup Route
-app.post('/Register', async (req, res) => {
+app.get('/register', async (req, res) => {
   const { username, email, password } = req.body;
 
   if (!username || !email || !password) {
